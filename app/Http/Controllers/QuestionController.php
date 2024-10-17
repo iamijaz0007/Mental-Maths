@@ -10,14 +10,17 @@ use App\Models\Question;
 class QuestionController extends Controller
 {
     public function create($sectionId)
-{
-    $section = Section::findOrFail($sectionId); // Retrieve the section
+    {
+        $section = Section::findOrFail($sectionId); // Retrieve the section
 
-    // Retrieve the worksheet associated with this section
-    $worksheet = $section->worksheet;
+        // Retrieve the worksheet associated with this section
+        $worksheet = $section->worksheet;
 
-    return view('questions.create', compact('section', 'worksheet')); // Pass the section and worksheet to the view
-}
+        // Get the current question count for this section
+        $questionCount = $section->questions()->count() + 1; // The next question number (e.g., if there are 3 questions, this will be 4)
+
+        return view('questions.create', compact('section', 'worksheet', 'questionCount')); // Pass the section, worksheet, and question count to the view
+    }
 
 
 

@@ -71,6 +71,7 @@
                                         <option value="" disabled>Select Gender</option>
                                         <option value="male" {{ old('gender', $parent->gender) == 'male' ? 'selected' : '' }}>Male</option>
                                         <option value="female" {{ old('gender', $parent->gender) == 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="female" {{ old('gender', $parent->gender) == 'other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>
                             </div>

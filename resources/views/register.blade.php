@@ -58,7 +58,7 @@
           <!-- Register Card -->
           <div class="card px-sm-6 px-0">
             <div class="card-body">
-              
+
               <h4 class="mb-1">Adventure starts here 🚀</h4>
               @if ($errors->any())
                   <div class="alert alert-danger">
@@ -69,16 +69,13 @@
                     </ul>
                   </div>
               @endif
-              
+
               <form id="register-form" class="mb-6" action="{{ route('registerSave') }}" method="POST">
                 @csrf
                 <div class="mb-6">
                     <label for="role" class="form-label">Role</label>
                     <select class="form-control" name="role">
-                        <option value="disable-selected">Select Role</option>
                         <option value="1">Admin</option>
-                        <option value="2">Principal</option>
-                        <option value="4">Parent</option>
                     </select>
                 </div>
                 <div class="mb-6">
@@ -99,7 +96,7 @@
                   </div>
                 </div>
 
-                
+
                 <button class="btn btn-primary d-grid w-100">Sign up</button>
               </form>
 

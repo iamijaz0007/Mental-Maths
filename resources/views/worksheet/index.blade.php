@@ -5,6 +5,7 @@
 @section('main')
     <div class="container my-4">
         <div class="card">
+            @include('layouts.message')
             <div class="card-header bg-label-primary text-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Worksheets Created for Students</h5>
                 <a href="{{ route('worksheet.create') }}" class="btn btn-primary">Create New Worksheet</a>
@@ -38,24 +39,31 @@
                                                     <div id="collapse{{ $worksheet->id }}{{ $index }}" class="accordion-collapse collapse{{ $index === 0 ? ' show' : '' }}" aria-labelledby="heading{{ $worksheet->id }}{{ $index }}" data-bs-parent="#accordion{{ $worksheet->id }}">
                                                         <div class="accordion-body">
                                                             <!-- Add Questions Button -->
-                                                            <a href="{{ route('questions.create', $section->id) }}" class="btn btn-sm btn-info mb-2">Add Questions</a>
+{{--                                                            <a href="{{ route('questions.create', $section->id) }}" class="btn btn-sm btn-info mb-3">+ Add Questions</a>--}}
 
                                                             <!-- List of Questions -->
-                                                            <ul class="list-unstyled mb-0">
+                                                            @if($section->questions->isNotEmpty())
                                                                 @foreach($section->questions as $question)
-                                                                    <li>
-                                                                        {{ $question->question_text }} ({{ ucfirst($question->difficulty) }}) - Correct Answer: {{ $question->correct_answer }}
-                                                                        <div class="d-flex mt-2">
-                                                                            <a href="{{ route('questions.edit', $question->id) }}" class="btn btn-sm btn-warning me-2">Edit</a>
-                                                                            <form action="{{ route('questions.destroy', $question->id) }}" method="POST" class="d-inline-block">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
-                                                                            </form>
+                                                                    <div class="card mb-3 shadow-sm">
+                                                                        <div class="card-body">
+                                                                            <h6 class="card-title">
+                                                                                <strong>Q:</strong> {{ $question->question_text }}
+                                                                            </h6>
+                                                                            <p class="card-text mb-1">
+                                                                                <strong>A:</strong> {{ $question->correct_answer }}
+                                                                            </p>
+                                                                            <p class="card-text mb-1">
+                                                                                <strong>Difficulty:</strong>
+                                                                                <span class="badge bg-label-{{ $question->difficulty == 'easy' ? 'success' : ($question->difficulty == 'medium' ? 'warning' : 'danger') }}">
+                                                                                    {{ ucfirst($question->difficulty) }}
+                                                                                </span>
+                                                                            </p>
                                                                         </div>
-                                                                    </li>
+                                                                    </div>
                                                                 @endforeach
-                                                            </ul>
+                                                            @else
+                                                                <p class="text-muted">No questions added to this section yet.</p>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -64,9 +72,6 @@
                                     @else
                                         <p>No sections added yet.</p>
                                     @endif
-
-                                    <!-- Add Section Button, Always Visible -->
-                                    <a href="{{ route('sections.create', $worksheet->id) }}" class="btn btn-info btn-sm mt-2">Add Section</a>
                                 </td>
 
                                 <td>

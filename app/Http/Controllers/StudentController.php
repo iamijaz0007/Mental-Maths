@@ -40,6 +40,15 @@ class StudentController extends Controller
 
     public function create(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+            'gender' => 'required|string|in:male,female',
+            'date_of_birth' => 'required|date|before:-6 years',
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
         $principal = auth()->user();
 
         // Check if the principal is authenticated and has a school_id
@@ -86,10 +95,10 @@ class StudentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $student->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:6|confirmed',
             'gender' => 'required|string|in:male,female',
-            'date_of_birth' => 'required|date|before:today',
-            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'date_of_birth' => 'required|date|before:-6 years',
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // Update the student data

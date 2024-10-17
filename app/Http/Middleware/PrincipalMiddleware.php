@@ -22,14 +22,14 @@ class PrincipalMiddleware
 
             // Check if the user is an admin
             if ($user->role == 1) {
-                return $next($request); // Allow admin access without school_id check
+                return $next($request);
             }
 
             // Check if the user is a principal and has a valid school_id
             if ($user->role == 2 && $user->school_id) {
                 // Check if the school is active or pending
                 $school = School::find($user->school_id);
-                
+
                 if ($school && ($school->status == 'active' || $school->status == 'pending')) {
                     return $next($request); // Allow access if the school is active or pending
                 } else {

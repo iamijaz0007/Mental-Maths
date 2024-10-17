@@ -21,7 +21,7 @@
                                 <th>Completed Sections</th>
                                 <th>Remaining Sections</th>
                                 <th>Status</th>
-                                <th>Error Report</th> <!-- New column for Error Report status -->
+                                <th>Error Report</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>

@@ -58,11 +58,11 @@ class ParentController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'gender' => 'required|in:male,female',
-            'phone' => 'required|digits:11',
-            'occupation' => 'nullable|string|max:255',
-            'date_of_birth' => 'required|date',
-            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'gender' => 'required|in:male,female,other',
+            'phone' => 'required|digits:11|unique:users,phone',
+            'occupation' => 'required|string|max:255',
+            'date_of_birth' => 'required|date|before:-30 years',
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         // Check if validation fails
@@ -107,11 +107,11 @@ class ParentController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6|confirmed',
-            'gender' => 'required|in:male,female',
+            'gender' => 'required|in:male,female,other',
             'phone' => 'required|digits:11',
-            'occupation' => 'nullable|string|max:255',
-            'date_of_birth' => 'required|date',
-            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'occupation' => 'required|string|max:255',
+            'date_of_birth' => 'required|date|before:-30 years',
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         // Check if validation fails
@@ -229,30 +229,55 @@ class ParentController extends Controller
             }])
             ->get();
 
-        // Prepare the progress data for the view
         $worksheetProgress = [];
         foreach ($studentProgress as $progress) {
             $sectionsData = [];
+
             foreach ($progress->worksheet->sections as $section) {
-                $sectionProgress = $section->sectionProgress->first(); // Fetch the first section progress for the child
+                $sectionProgress = $section->sectionProgress->first();
 
                 // Add section data with time spent
                 $sectionsData[] = [
-                    'section_name' => $section->subject, // Adjust according to your section field name
+                    'section_name' => $section->subject ?? 'N/A', // Safeguard against missing subject
                     'time_spent' => $sectionProgress ? $sectionProgress->time_taken : 0 // Time spent on the section
                 ];
             }
 
+            // Count total questions for the worksheet
+            $totalQuestions = $progress->worksheet->questions->count();
+            $correctQuestions = $progress->correct_questions;
+            $incorrectQuestions = $progress->incorrect_questions;
+
+            // Calculate the percentage of correct answers
+            $correctPercentage = $totalQuestions > 0 ? ($correctQuestions / $totalQuestions) * 100 : 0;
+
+            // Determine the grade based on the percentage
+            $grade = '';
+            if ($correctPercentage >= 90) {
+                $grade = 'A';
+            } elseif ($correctPercentage >= 80) {
+                $grade = 'B';
+            } elseif ($correctPercentage >= 70) {
+                $grade = 'C';
+            } elseif ($correctPercentage >= 60) {
+                $grade = 'D';
+            } else {
+                $grade = 'F';
+            }
+
+            // Add data to worksheet progress
             $worksheetProgress[] = [
-                'worksheet_name' => $progress->worksheet->name,
+                'worksheet_name' => $progress->worksheet->name ?? 'Unnamed Worksheet', // Safeguard for missing name
+                'totalQuestions' => $totalQuestions,
+                'correctQuestions' => $correctQuestions,
+                'incorrectQuestions' => $incorrectQuestions,
                 'totalSections' => $progress->total_sections,
                 'completedSections' => $progress->completed_sections,
                 'remainingSections' => $progress->total_sections - $progress->completed_sections,
-                'correctQuestions' => $progress->correct_questions,
-                'incorrectQuestions' => $progress->incorrect_questions,
-                'totalTimeSpent' => $progress->total_time_spent_on_worksheets,
+                'totalTimeSpent' => $progress->total_time_spent_on_worksheets ?? 0, // Safeguard against null time
                 'status' => ($progress->completed_sections == $progress->total_sections) ? 'Completed' : 'In Progress',
-                'sections' => $sectionsData // Add section data
+                'sections' => $sectionsData,
+                'grade' => $grade // Add grade to the data
             ];
         }
 

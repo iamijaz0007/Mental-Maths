@@ -68,16 +68,22 @@ class SectionController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Validate the request data
         $request->validate([
             'subject' => 'required|string|max:255',
             'difficulty_level' => 'required|integer|min:1|max:5',
         ]);
 
+        // Find the section by ID
         $section = Section::findOrFail($id);
+
+        // Update the section with the new data
         $section->update($request->all());
 
-        return redirect()->route('worksheet.index')->with('success', 'Section updated successfully!');
+        // Redirect back to the worksheet's show page
+        return redirect()->route('worksheet.show', $section->worksheet_id)->with('success', 'Section updated successfully!');
     }
+
 
     public function destroy($id)
     {

@@ -5,7 +5,7 @@
 @section('main')
     <div class="container my-4">
         <div class="card">
-            <div class="card-header bg-label-primary text-white d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Progress for {{ $child->name }}</h5>
             </div>
             <div class="card-body">
@@ -17,9 +17,11 @@
                             <th>Total Sections</th>
                             <th>Completed Sections</th>
                             <th>Remaining Sections</th>
+                            <th>Total Questions</th>
                             <th>Correct Questions</th>
                             <th>Incorrect Questions</th>
                             <th>Total Time Spent (mins)</th>
+                            <th>Grade</th>
                             <th>Status</th>
                         </tr>
                         </thead>
@@ -31,11 +33,14 @@
                                     <td>{{ $progress['totalSections'] }}</td>
                                     <td>{{ $progress['completedSections'] }}</td>
                                     <td>{{ $progress['remainingSections'] }}</td>
+                                    <td>{{ $progress['totalQuestions'] }}</td>
                                     <td>{{ $progress['correctQuestions'] }}</td>
                                     <td>{{ $progress['incorrectQuestions'] }}</td>
                                     <td>{{ round($progress['totalTimeSpent'] / 60, 2) }} mins</td>
+                                    <td>{{ $progress['grade'] }}</td>
                                     <td>
-                                        <span class="bg-label-success {{ $progress['status'] == 'Completed' ? 'badge-success' : 'badge-warning' }}">
+                                        <span class="badge
+                                            {{ $progress['status'] == 'Completed' ? 'bg-label-success' : ($progress['status'] == 'Incomplete' ? 'bg-label-danger' : 'bg-label-warning') }}">
                                             {{ $progress['status'] }}
                                         </span>
                                     </td>
@@ -43,7 +48,7 @@
 
                                 <!-- Nested table for section time spent -->
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="10">
                                         <table class="table table-bordered table-sm">
                                             <thead>
                                             <tr>
@@ -65,7 +70,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="8" class="text-center">No worksheets completed for {{ $child->name }} yet.</td>
+                                <td colspan="10" class="text-center">No worksheets completed for {{ $child->name }} yet.</td>
                             </tr>
                         @endif
                         </tbody>

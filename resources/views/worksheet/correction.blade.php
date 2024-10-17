@@ -24,7 +24,7 @@
                                     <p class="text-success"><strong>Correct Answer:</strong> {{ $answer->question->correct_answer }}</p>
                                     <div class="answer-box mt-3">
                                         <label for="answer-{{ $answer->question_id }}" class="form-label">Your Correction:</label>
-                                        <input type="text" id="answer-{{ $answer->question_id }}" name="answers[{{ $answer->question_id }}]" class="form-control answer-input" value="{{ $answer->student_answer }}" required>
+                                        <input type="number" id="answer-{{ $answer->question_id }}" name="answers[{{ $answer->question_id }}]" class="form-control answer-input" value="{{ $answer->student_answer }}" required step="any">
                                     </div>
                                 </div>
                             @endforeach

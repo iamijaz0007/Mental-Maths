@@ -74,6 +74,7 @@
                                         <option value="" disabled {{ old('gender') === null ? 'selected' : '' }}>Select Gender</option>
                                         <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male</option>
                                         <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="female" {{ old('gender') === 'other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>
                             </div>

@@ -17,13 +17,9 @@
                         <!-- Section Name -->
                         <div class="col-md-6 mb-3">
                             <label for="subject" class="form-label">Section Name:</label>
-                            <select id="subject" name="subject" class="form-control" required>
-                                <option value="">Select Section Name</option>
-                                <option value="Addition" {{ $section->subject == 'Addition' ? 'selected' : '' }}>Addition</option>
-                                <option value="Subtraction" {{ $section->subject == 'Subtraction' ? 'selected' : '' }}>Subtraction</option>
-                                <option value="Multiplication" {{ $section->subject == 'Multiplication' ? 'selected' : '' }}>Multiplication</option>
-                                <option value="Division" {{ $section->subject == 'Division' ? 'selected' : '' }}>Division</option>
-                            </select>
+                            <div class="col-sm-9">
+                                <input value="{{ $section->subject }}" type="text" class="form-control" id="subject" name="subject" placeholder="Enter Section Name"  />
+                            </div>
                         </div>
 
                         <!-- Difficulty Level -->
@@ -35,10 +31,9 @@
                                 <option value="3" {{ $section->difficulty_level == 3 ? 'selected' : '' }}>Hard</option>
                             </select>
                         </div>
-
                     </div>
 
-                    <button type="submit" class="btn btn-success">Update Section</button>
+                    <button type="submit" class="btn btn-primary">Update Section</button>
                 </form>
             </div>
         </div>

@@ -52,7 +52,7 @@ class AuthenticationController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role' => 'required|in:1,2,4'
+            'role' => 'required|in:1'
         ]);
 
         $user = new User();
@@ -119,7 +119,7 @@ class AuthenticationController extends Controller
         $request->validate([
             'email' => 'required|email', // This line validates the email input
         ]);
-    
+
         $user = User::getEmailSingle($request->email);
         if(!empty($user))
         {

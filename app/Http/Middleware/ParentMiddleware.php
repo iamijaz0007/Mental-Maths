@@ -19,7 +19,7 @@ class ParentMiddleware
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role == 4) { // Role 4 is for parent
+            if ($user->role == 4) {
                 // Check if the parent has children assigned
                 if ($user->children()->count() > 0) {
                     return $next($request);

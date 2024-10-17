@@ -6,7 +6,7 @@
     <div class="container mt-4">
         <div class="card shadow-sm">
             <div class="card-header bg-label-primary text-white">
-                <h5 class="mb-0">Add Question to Section: {{ $section->subject }}</h5>
+                <h5 class="mb-0">Add Question {{ $questionCount }} to Section: {{ $section->subject }}</h5>
                 @include('layouts.message')
             </div>
             <div class="card-body mt-3">
@@ -41,8 +41,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Add Question</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Add Question</button>
+                    <a href="{{ route('worksheet.show', $worksheet->id) }}" class="btn btn-info btn-sm">Back</a>
                 </form>
             </div>
         </div>

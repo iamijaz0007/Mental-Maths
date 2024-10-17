@@ -225,47 +225,77 @@ class PrincipalController extends Controller
         // Ensure the principal is authenticated
         $principal = Auth::user();
 
-        // Fetch the student's data by ID
+        // Fetch the student's data by ID, throw 404 if not found
         $student = User::findOrFail($studentId);
 
         // Fetch the student's progress from the student_progress table with associated worksheet and section progress
         $studentProgress = StudentProgress::where('user_id', $student->id)
-            ->with(['worksheet.sections' => function ($query) use ($student) {
-                $query->with(['sectionProgress' => function ($progressQuery) use ($student) {
+            ->with([
+                'worksheet.sections.sectionProgress' => function ($progressQuery) use ($student) {
                     $progressQuery->where('user_id', $student->id);
-                }]);
-            }])
+                },
+                'worksheet.questions' // Ensure questions are eager loaded
+            ])
             ->get();
 
         // Prepare the worksheet progress for the view
         $worksheetProgress = [];
         foreach ($studentProgress as $progress) {
             $sectionsData = [];
+
             foreach ($progress->worksheet->sections as $section) {
                 $sectionProgress = $section->sectionProgress->first();
 
                 // Add section data with time spent
                 $sectionsData[] = [
-                    'section_name' => $section->subject, // Adjust the field name to match your schema
+                    'section_name' => $section->subject ?? 'N/A', // Safeguard against missing subject
                     'time_spent' => $sectionProgress ? $sectionProgress->time_taken : 0 // Time spent on the section
                 ];
             }
 
+            // Count total questions for the worksheet
+            $totalQuestions = $progress->worksheet->questions->count();
+            $correctQuestions = $progress->correct_questions;
+            $incorrectQuestions = $progress->incorrect_questions;
+
+            // Calculate the percentage of correct answers
+            $correctPercentage = $totalQuestions > 0 ? ($correctQuestions / $totalQuestions) * 100 : 0;
+
+            // Determine the grade based on the percentage
+            $grade = '';
+            if ($correctPercentage >= 90) {
+                $grade = 'A';
+            } elseif ($correctPercentage >= 80) {
+                $grade = 'B';
+            } elseif ($correctPercentage >= 70) {
+                $grade = 'C';
+            } elseif ($correctPercentage >= 60) {
+                $grade = 'D';
+            } else {
+                $grade = 'F';
+            }
+
+            // Add data to worksheet progress
             $worksheetProgress[] = [
-                'worksheet_name' => $progress->worksheet->name,
+                'worksheet_name' => $progress->worksheet->name ?? 'Unnamed Worksheet', // Safeguard for missing name
+                'totalQuestions' => $totalQuestions,
+                'correctQuestions' => $correctQuestions,
+                'incorrectQuestions' => $incorrectQuestions,
                 'totalSections' => $progress->total_sections,
                 'completedSections' => $progress->completed_sections,
                 'remainingSections' => $progress->total_sections - $progress->completed_sections,
-                'correctQuestions' => $progress->correct_questions,
-                'incorrectQuestions' => $progress->incorrect_questions,
-                'totalTimeSpent' => $progress->total_time_spent_on_worksheets,
+                'totalTimeSpent' => $progress->total_time_spent_on_worksheets ?? 0, // Safeguard against null time
                 'status' => ($progress->completed_sections == $progress->total_sections) ? 'Completed' : 'In Progress',
-                'sections' => $sectionsData // Add section data with time spent
+                'sections' => $sectionsData,
+                'grade' => $grade
             ];
         }
 
+        // Render the view with the student's progress data
         return view('principal.showStudent_progress', compact('worksheetProgress', 'student'));
     }
+
+
 
 
 

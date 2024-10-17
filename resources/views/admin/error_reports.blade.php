@@ -27,8 +27,13 @@
                             <td>{{ $report->worksheet->name ?? 'N/A' }}</td>
                             <td>{{ $report->error_message }}</td>
                             <td>
-                                <a href="{{ route('admin.resolve_report', ['id' => $report->id]) }}" class="btn btn-primary">Resolve</a>
-                                <a href="{{ route('admin.not_an_error', ['id' => $report->id]) }}" class="btn btn-danger">Not an Error</a>
+                                @if($report->status === 'resolved' || $report->status === 'not_an_error')
+                                    <button class="btn btn-secondary" disabled>Resolved</button>
+                                    <button class="btn btn-secondary" disabled>Not an Error</button>
+                                @else
+                                    <a href="{{ route('admin.resolve_report', ['id' => $report->id]) }}" class="btn btn-primary">Resolve</a>
+                                    <a href="{{ route('admin.not_an_error', ['id' => $report->id]) }}" class="btn btn-danger">Not an Error</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

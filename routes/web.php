@@ -32,9 +32,9 @@ Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
 Route::get('/register', [AuthenticationController::class, 'register'])->name('register');
 Route::post('register-save', [AuthenticationController::class, 'registerSave'])->name('registerSave');
 
-Route::get('forgot-password', [AuthenticationController::class, 'forgotpassword'])->name('forgotpassword');
-Route::post('forgot-password', [AuthenticationController::class, 'Postforgotpassword'])->name('Postforgotpassword');
-Route::get('password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+//Route::get('forgot-password', [AuthenticationController::class, 'forgotpassword'])->name('forgotpassword');
+//Route::post('forgot-password', [AuthenticationController::class, 'Postforgotpassword'])->name('Postforgotpassword');
+//Route::get('password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [UserController::class, 'update'])->name('profile.update');
@@ -91,7 +91,7 @@ Route::middleware([AdminMiddleware::class])->group(function(){
     Route::put('/worksheets/{id}', [WorksheetController::class, 'update'])->name('worksheet.update');
     Route::delete('/worksheets/{id}', [WorksheetController::class, 'destroy'])->name('worksheet.destroy');
 
-// Routes for Sections
+    // Routes for Sections
     Route::get('/admin/worksheets/{worksheet}/sections/create', [SectionController::class, 'create'])->name('sections.create');
     Route::post('/admin/worksheets/{worksheet}/sections', [SectionController::class, 'store'])->name('sections.store');
     Route::get('/admin/sections', [SectionController::class, 'index'])->name('sections.index');
@@ -99,7 +99,7 @@ Route::middleware([AdminMiddleware::class])->group(function(){
     Route::put('/sections/{id}', [SectionController::class, 'update'])->name('sections.update');
     Route::delete('/sections/{id}', [SectionController::class, 'destroy'])->name('sections.destroy');
 
-// Routes for Questions
+    // Routes for Questions
     Route::get('/admin/sections/{section}/questions/create', [QuestionController::class, 'create'])->name('questions.create');
     Route::post('/admin/sections/{section}/questions', [QuestionController::class, 'store'])->name('questions.store');
     Route::get('/questions/{id}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
@@ -110,18 +110,9 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
     // error reports
     Route::get('admin/error-reports', [AdminController::class, 'errorReports'])->name('admin.error_reports');
-    Route::get('admin/error-reports/{id}/resolve', [AdminController::class, 'resolveReport'])->name('admin.resolve_report');
-    Route::get('admin/error-reports/{id}/not-an-error', [AdminController::class, 'markNotAnError'])->name('admin.not_an_error');
-
-    Route::get('admin/error-reports/{id}/resolve', [AdminController::class, 'resolveReport'])->name('admin.resolve_report');
-Route::get('admin/error-reports/{id}/not-an-error', [AdminController::class, 'notAnErrorReport'])->name('admin.not_an_error');
-
-// Show form to resolve the error report
-Route::get('/admin/error-report/{id}/resolve', [AdminController::class, 'showResolveForm'])->name('admin.resolve_report');
-
-// Handle the form submission and resolve the report
-Route::post('/admin/error-report/{id}/resolve', [AdminController::class, 'submitResolution'])->name('admin.submit_resolution');
-
+    Route::get('admin/error-reports/{id}/not-an-error', [AdminController::class, 'notAnErrorReport'])->name('admin.not_an_error');
+    Route::get('/admin/error-report/{id}/resolve', [AdminController::class, 'showResolveForm'])->name('admin.resolve_report');
+    Route::post('/admin/error-report/{id}/resolve', [AdminController::class, 'submitResolution'])->name('admin.submit_resolution');
 
 });
 
@@ -138,16 +129,16 @@ Route::middleware([PrincipalMiddleware::class])->group(function(){
     Route::put('principal/students/{student}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('principal/student-delete/{id}', [StudentController::class, 'delete'])->name('student.delete');
 
-//    show the progress of students
+    //show the progress of students
     Route::get('/principal/student-progress', [PrincipalController::class, 'viewStudentProgress'])->name('principal.student.progress');
     Route::get('/principal/student/{studentId}/progress', [PrincipalController::class, 'showStudentProgress'])->name('principal.show-student-progress');
 
-//    parent of students
+    //parent of students
     Route::get('/school-parents', [PrincipalController::class, 'listSchoolParents'])->name('school.parents');
 
-//    send complain and report
-    Route::get('/parent/{id}/report', [ParentController::class, 'sendReport'])->name('parent.report');
-    Route::get('/parent/{id}/complain', [ParentController::class, 'sendComplain'])->name('parent.complain');
+    //send complain and report
+//    Route::get('/parent/{id}/report', [ParentController::class, 'sendReport'])->name('parent.report');
+//    Route::get('/parent/{id}/complain', [ParentController::class, 'sendComplain'])->name('parent.complain');
 
 
 });
@@ -157,43 +148,35 @@ Route::middleware([PrincipalMiddleware::class])->group(function(){
 Route::middleware([StudentMiddleware::class])->group(function() {
     Route::get('/student/dashboard', [DashboardController::class, 'index'])->name('student.dashboard');
 
+    // student worksheet routes
     Route::get('/student/student-worksheets', [WorksheetController::class, 'worksheet_list'])->name('worksheet.worksheet_list');
-    Route::get('/worksheet/student-worksheets/{worksheet}', [WorksheetController::class, 'student_worksheet'])->name('worksheet.student_worksheet');
-    Route::post('/worksheet/pause', [WorksheetController::class, 'pauseWorksheet'])->name('worksheet.pause');
-    Route::post('/error/report', [WorksheetController::class, 'reportError'])->name('error.report');
-    Route::post('/worksheet/{worksheet}/submit', [WorksheetController::class, 'submit'])->name('worksheet.submit');
-
-    Route::get('/worksheet/start', [WorksheetController::class, 'startWorksheet'])->name('worksheet.start'); // Missing route added
-
     Route::get('/worksheet/{worksheet}/section/{section?}', [WorksheetController::class, 'student_worksheet'])->name('worksheet.student_worksheet');
     Route::post('/worksheet/{worksheet}/section/{section}/submit', [WorksheetController::class, 'submit_section'])->name('worksheet.submit_section');
     Route::get('/worksheet/{worksheet}/confirm-submission', [WorksheetController::class, 'confirm_submission'])->name('worksheet.confirm_submission');
     Route::post('/worksheet/{worksheet}/submit', [WorksheetController::class, 'submit_worksheet'])->name('worksheet.submit_worksheet');
 
-    // Error report routes
-    Route::get('worksheet/{worksheet}/report', [WorksheetController::class, 'showErrorReportForm'])->name('worksheet.report');
-    Route::post('worksheet/{worksheet}/report', [WorksheetController::class, 'submitErrorReport'])->name('worksheet.submit_report');
-    Route::get('worksheet/{worksheet}/error-report-confirmation', [WorksheetController::class, 'showErrorReportConfirmation'])->name('worksheet.error_report_confirmation');
-
-    Route::get('student/progress', [WorksheetController::class, 'showProgress'])->name('student.progress');
-
-    // Notifications
-    Route::get('/student/notifications', [WorksheetController::class, 'getStudentNotifications'])->name('student.notifications');
-
     // Correction worksheet routes
     Route::get('/worksheet/{worksheet}/correction', [WorksheetController::class, 'showCorrection'])->name('worksheet.correction');
     Route::post('/worksheet/{worksheet}/correction', [WorksheetController::class, 'submitCorrection'])->name('worksheet.submit_correction');
+
+    // student Error report routes
+    Route::get('worksheet/{worksheet}/report', [WorksheetController::class, 'showErrorReportForm'])->name('worksheet.report');
+    Route::post('worksheet/{worksheet}/report', [WorksheetController::class, 'submitErrorReport'])->name('worksheet.submit_report');
+    Route::get('worksheet/{worksheet}/error-report-confirmation', [WorksheetController::class, 'showErrorReportConfirmation'])->name('worksheet.error_report_confirmation');
 
     // for practice-worksheet worksheet
     Route::get('/worksheet/start', [PracticeWorksheetController::class, 'worksheet'])->name('practice-worksheet.start');
     Route::get('/practice-worksheet', [PracticeWorksheetController::class, 'worksheet'])->name('practice-worksheet.worksheet');
     Route::post('/practice-worksheet-submit', [PracticeWorksheetController::class, 'submit'])->name('practice.worksheet.submit');
 
+    // student Notifications
+    Route::get('/student/notifications', [WorksheetController::class, 'getStudentNotifications'])->name('student.notifications');
+
 });
 
 
 
-// for student middleware
+// for parent middleware
 Route::middleware([ParentMiddleware::class])->group(function(){
     Route::get('/parent/dashboard', [DashboardController::class, 'index'])->name('parent.dashboard');
 

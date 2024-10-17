@@ -18,8 +18,8 @@ class AdminMiddleware
     {
         if (Auth::check()) {
             $user = Auth::user();
-    
-            if ($user->role == 1) { // Assuming role 1 is for admins
+
+            if ($user->role == 1) {
                 return $next($request);
             } else {
                 Auth::logout();

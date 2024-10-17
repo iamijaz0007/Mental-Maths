@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\SectionProgress;
 use App\Models\User;
 use App\Models\ErrorReport;
+use App\Models\StudentProgress;
 use Illuminate\Support\Facades\DB;
 
 
@@ -275,7 +276,7 @@ class WorksheetController extends Controller
         );
 
         // Update the student progress table
-        $studentProgress = \App\Models\StudentProgress::firstOrCreate(
+        $studentProgress = StudentProgress::firstOrCreate(
             [
                 'user_id' => $user->id,
                 'worksheet_id' => $worksheetId,
@@ -439,43 +440,6 @@ class WorksheetController extends Controller
         ]);
 
         return redirect()->route('worksheet.worksheet_list')->with('success', 'Your error report has been submitted successfully.');
-    }
-
-
-    public function showProgress()
-    {
-        $user = Auth::user(); // Get the currently logged-in student
-
-        // Fetch worksheets assigned to the student, including their error reports
-        $worksheets = Worksheet::where('user_id', $user->id)->with(['errorReports' => function($query) use ($user) {
-            $query->where('student_id', $user->id);
-        }])->get();
-
-        // Assuming there's a method to calculate worksheet progress (like total and completed sections)
-        $worksheetProgress = $this->calculateWorksheetProgress($worksheets, $user);
-
-        // Return the view with the data to display
-        return view('student.worksheet_progress', compact('worksheets', 'worksheetProgress'));
-    }
-
-    private function calculateWorksheetProgress($worksheets, $user)
-    {
-        $progress = [];
-
-        foreach ($worksheets as $worksheet) {
-            $totalSections = $worksheet->sections()->count(); // Total sections in the worksheet
-            $completedSections = $worksheet->sections()->whereHas('progress', function ($query) use ($user) {
-                $query->where('user_id', $user->id)->where('completed', true);
-            })->count(); // Sections the user has completed
-
-            $progress[$worksheet->id] = [
-                'totalSections' => $totalSections,
-                'completedSections' => $completedSections,
-                'remainingSections' => $totalSections - $completedSections,
-            ];
-        }
-
-        return $progress;
     }
 
     public function getStudentNotifications()

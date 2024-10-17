@@ -25,7 +25,7 @@
                                     <p class="question-text">{{ $question->question_text }}</p>
                                     <div class="answer-box mt-3">
                                         <label for="answer-{{ $question->id }}" class="form-label">Your Answer:</label>
-                                        <input type="number" id="answer-{{ $question->id }}" name="answers[{{ $question->id }}]" class="form-control answer-input" placeholder="Enter your answer" required>
+                                        <input type="number" id="answer-{{ $question->id }}" name="answers[{{ $question->id }}]" class="form-control answer-input" placeholder="Enter your answer" required step="any">
                                     </div>
                                 </div>
                             @endforeach

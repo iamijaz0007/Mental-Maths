@@ -25,13 +25,9 @@
                     <div class="row mt-3">
                         <div class="col-md-6 mb-3">
                             <label for="subject" class="form-label">Section Name:</label>
-                            <select id="subject" name="subject" class="form-control" required>
-                                <option value="">Select Section Name</option>
-                                <option value="Addition">Addition</option>
-                                <option value="Subtraction">Subtraction</option>
-                                <option value="Multiplication">Multiplication</option>
-                                <option value="Division">Division</option>
-                            </select>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter Section Name"  />
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="difficulty_level" class="form-label">Difficulty Level:</label>

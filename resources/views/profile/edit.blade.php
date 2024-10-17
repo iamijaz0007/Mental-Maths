@@ -9,7 +9,15 @@
                     <div class="card mb-6">
                         <div class="card-body">
                             <h4 class="mb-4">Edit Profile</h4>
-
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             @include('layouts.message')
 
                             <!-- Profile Picture -->
@@ -56,7 +64,6 @@
                                 </div>
                                 <div class="mt-4">
                                     <button type="submit" class="btn btn-primary me-3">Save changes</button>
-                                    <button type="reset" class="btn btn-outline-secondary">Cancel</button>
                                 </div>
                             </div>
                             </form>

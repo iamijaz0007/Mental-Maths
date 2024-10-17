@@ -28,7 +28,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id, // unique email validation except the current user
-            'password' => 'nullable|min:8|confirmed', // password confirmation required if changing password
+            'password' => 'nullable|min:6|confirmed', // password confirmation required if changing password
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // validation for profile picture
         ]);
 
